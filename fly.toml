@@ -8,9 +8,6 @@ primary_region = 'lhr'
 
 [build]
 
-[processes]
-  app = 'bun ./dbsetup.js node node_modules/tsx/dist/cli.mjs server/index.ts'
-
 [[mounts]]
   source = 'data'
   destination = '/data'
