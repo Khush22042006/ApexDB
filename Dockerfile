@@ -1,4 +1,5 @@
 FROM node:22-slim AS build
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
@@ -10,7 +11,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 RUN mkdir -p /data && chown node:node /data
 COPY package*.json ./
-RUN npm install --omit=dev --legacy-peer-deps
+COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --from=build --chown=node:node /app/server ./server
 COPY --chown=node:node .env.example ./.env.example
