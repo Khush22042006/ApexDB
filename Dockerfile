@@ -4,11 +4,13 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
-RUN npm run build
+RUN npm run build && npm prune --omit=dev
 
 FROM node:22-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
+ENV PORT=4000
+ENV DATABASE_PATH=/data/apex.db
 RUN mkdir -p /data && chown node:node /data
 COPY package*.json ./
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
