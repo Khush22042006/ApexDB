@@ -24,7 +24,14 @@ app.use(helmet({
   contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
   crossOriginEmbedderPolicy: false,
 }));
-app.use(cors({
+
+const distPath = path.resolve(process.cwd(), 'dist');
+const hasProductionBuild = process.env.NODE_ENV === 'production' && fs.existsSync(distPath);
+if (hasProductionBuild) {
+  app.use(express.static(distPath, { index: false, maxAge: '1h', immutable: true }));
+}
+
+app.use('/api/', cors({
   origin(origin, callback) {
     if (!origin || config.corsOrigins.includes(origin)) callback(null, true);
     else callback(new Error('Origin not allowed by CORS'));
@@ -227,8 +234,7 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(500).json({ error: 'Internal server error' });
 });
 
-const distPath = path.resolve(process.cwd(), 'dist');
-if (process.env.NODE_ENV === 'production' && fs.existsSync(distPath)) {
-  app.use(express.static(distPath, { index: false, maxAge: '1h', immutable: true }));
-  app.use((_req, res) => res.sendFile(path.join(distPath, 'index.html')));
+if (hasProductionBuild) {
+  app.use('/api', (_req, res) => res.status(404).json({ error: 'API route not found' }));
+  app.get(/.*/, (_req, res) => res.sendFile(path.join(distPath, 'index.html')));
 }
