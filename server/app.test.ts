@@ -6,7 +6,7 @@ import { closeDatabase, db } from './database.ts';
 let accessToken = '';
 
 beforeAll(async () => {
-  const login = await request(app).post('/api/v1/auth/login').send({ username: 'admin', password: process.env.APEX_BOOTSTRAP_ADMIN_PASSWORD || 'ChangeMe-Admin!2026' });
+  const login = await request(app).post('/api/v1/auth/login').send({ username: 'admin', password: process.env.APEX_BOOTSTRAP_ADMIN_PASSWORD });
   expect(login.status).toBe(200);
   accessToken = login.body.accessToken;
   db.prepare(`DELETE FROM app_data WHERE namespace = 'test'`).run();

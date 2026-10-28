@@ -61,4 +61,8 @@ export const apexApi = {
     accessToken = access;
     refreshToken = refresh;
   },
+  clearSession() {
+    accessToken = null;
+    refreshToken = null;
+  },
 };

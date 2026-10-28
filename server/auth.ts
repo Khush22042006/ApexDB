@@ -85,13 +85,13 @@ export function seedAdmin(): void {
   const count = db.prepare('SELECT COUNT(*) AS count FROM users').get() as { count: number };
   if (count.count > 0) return;
   const password = process.env.APEX_BOOTSTRAP_ADMIN_PASSWORD;
-  if (process.env.NODE_ENV === 'production' && !password) {
-    throw new Error('APEX_BOOTSTRAP_ADMIN_PASSWORD is required for the first production startup');
+  if (!password) {
+    throw new Error('APEX_BOOTSTRAP_ADMIN_PASSWORD is required for the first startup');
   }
   const now = Math.floor(Date.now() / 1000);
   db.prepare(`INSERT INTO users(username, email, password_hash, role, created_at, updated_at)
               VALUES (?, ?, ?, 'admin', ?, ?)`).run(
-    'admin', 'admin@apex.local', bcrypt.hashSync(password || 'ChangeMe-Admin!2026', 12), now, now,
+    'admin', 'admin@apex.local', bcrypt.hashSync(password, 12), now, now,
   );
 }
 

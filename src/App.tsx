@@ -116,6 +116,7 @@ export default function App() {
 
   const handleLogout = async () => {
     try { await apexApi.logout(); } finally {
+      apexApi.clearSession();
       sessionStorage.removeItem('apexdb.auth.user');
       sessionStorage.removeItem('apexdb.auth.access');
       sessionStorage.removeItem('apexdb.auth.refresh');
