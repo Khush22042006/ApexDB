@@ -1,0 +1,6 @@
+{
+  "name": "ApexDB — Relational Database from Scratch",
+  "description": "An end-to-end relational database engine engineered from scratch with a custom SQL parser, B+ Tree indexing, slotted-page storage engine, LRU buffer pool, and Write-Ahead Log (WAL).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
